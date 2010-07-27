@@ -2661,6 +2661,13 @@ int key;
       MakeTermcap((display == 0));
       debug("new termcap made\n");
       break;
+    case RC_TTY:
+      if(!args[0])
+      {
+        char buf[256];
+        OutputMsg(0, "%s", fore->w_tty);
+      }
+      break;
     case RC_ECHO:
       if (!msgok && (!rc_name || strcmp(rc_name, "-X")))
 	break;
