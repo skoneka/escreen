@@ -1198,6 +1198,8 @@ Ditto, for both systems.  @xref{Termcap Syntax}.
 Display time and load average.  @xref{Time}.
 @item title [@var{windowtitle}]
 Set the name of the current window.  @xref{Title Command}.
+@item tty
+Display the filename of the current window terminal.  @xref{Tty}.
 @item umask [@var{users}]+/-@var{bits} ...
 Synonym to @code{aclumask}. @xref{Umask}.
 @item unbindall
@@ -5025,6 +5027,7 @@ categories.
 * Nonblock::			Disable flow-control to a display.
 * Number::                      Change the current window's number.
 * Time::                        Display the time and load average.
+* Tty::                         Display the filename of current window terminal.
 * Verbose::                     Display window creation commands.
 * Version::                     Display the version of @code{screen}.
 * Zombie::                      Keep dead windows.
@@ -5185,7 +5188,7 @@ plus (`+') or minus (`-') will change the window's number by the relative
 amount specified.
 @end deffn
 
-@node Time, Verbose, Number, Miscellaneous
+@node Time, Tty, Number, Miscellaneous
 @section Time
 @kindex t
 @kindex C-t
@@ -5198,7 +5201,13 @@ If a @var{string} is specified, it changes the format of the time report
 like it is described in the string escapes chapter (@pxref{String Escapes}). Screen uses a default of @samp{%c:%s %M %d %H%? %l%?}.
 @end deffn
 
-@node Verbose, Version, Time, Miscellaneous
+@node Tty, Verbose, Time, Miscellaneous
+@section Tty
+@deffn Command tty
+Displays the filename of the current window terminal. Useful for uniquely recognizing windows.
+@end deffn
+
+@node Verbose, Version, Tty, Miscellaneous
 @section Verbose
 @deffn Command verbose [on|off]
 If verbose is switched on, the command name is echoed, whenever a window

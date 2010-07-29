@@ -322,6 +322,7 @@ The commands that can be queried now are:
  \fBselect\fP
  \fBtime\fP
  \fBtitle\fP
+ \fBtty\fP
  \fBwindows\fP
 .TP 5
 .BR \-r " [" \fIpid.tty.host ]
@@ -3221,6 +3222,11 @@ specified,
 .I screen
 prompts for one. This command was known as `aka' in previous
 releases.
+.sp
+.ne 3
+.BI "tty "
+.PP
+Displays the filename of the current window terminal. Useful for uniquely recognizing windows.
 .sp
 .ne 3
 .BI "unbindall "
