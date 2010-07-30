@@ -212,6 +212,7 @@ extern int   IsNumColon __P((char *, int, char *, int));
 extern void  ShowWindows __P((struct action *,int));
 extern char *AddWindows __P((char *, int, int, int));
 extern char *AddWindowFlags __P((char *, int, struct win *));
+extern int   NumberOfWindows __P((int));
 extern char *AddOtherUsers __P((char *, int, struct win *));
 extern int   WindowByNoN __P((char *));
 extern struct win *FindNiceWindow __P((struct win *, char *));
