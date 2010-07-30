@@ -5455,26 +5455,6 @@ int where;
   return ss;
 }
 
-int
-NumberOfWindows(flags)
-int flags;
-{
-  int number_of_windows = 1;
-  struct win **pp, *p;
-
-  for (pp = wtab; pp < wtab + MAXWIN; pp++)
-    {
-      if ((p = *pp) == 0)
-	continue;
-      if ((flags & 1) && display && p == D_fore)
-	continue;
-      if (D_fore && D_fore->w_group != p->w_group)
-	continue;
-      number_of_windows++;
-    }
-  return number_of_windows;
-}
-
 char *
 AddWindowFlags(buf, len, p)
 char *buf;
