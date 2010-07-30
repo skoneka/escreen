@@ -209,7 +209,7 @@ extern int   Parse __P((char *, int, char **, int *));
 extern void  SetEscape __P((struct acluser *, int, int));
 extern void  DoScreen __P((char *, char **));
 extern int   IsNumColon __P((char *, int, char *, int));
-extern void  ShowWindows __P((int));
+extern void  ShowWindows __P((struct action *,int));
 extern char *AddWindows __P((char *, int, int, int));
 extern char *AddWindowFlags __P((char *, int, struct win *));
 extern char *AddOtherUsers __P((char *, int, struct win *));

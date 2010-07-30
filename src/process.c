@@ -86,6 +86,7 @@ extern int defmousetrack;
 extern int ZombieKey_destroy;
 extern int ZombieKey_resurrect;
 extern int ZombieKey_onerror;
+extern int defakaargs;
 #ifdef AUTO_NUKE
 extern int defautonuke;
 #endif
@@ -142,6 +143,8 @@ static char **SaveArgs __P((char **));
 static int  IsNum __P((char *, int));
 static void Colonfin __P((char *, int, char *));
 static void InputSelect __P((void));
+static void InputSearch __P((void));
+static void SearchFin __P((char *, int, char *));
 static void InputSetenv __P((char *));
 static void InputAKA __P((void));
 #ifdef MULTIUSER
@@ -542,6 +545,7 @@ InitKeytab()
     }
 #endif
 
+  ktab['/'].nr = RC_SEARCH;
   ktab['h'].nr = RC_HARDCOPY;
 #ifdef BSDJOBS
   ktab['z'].nr = ktab[Ctrl('z')].nr = RC_SUSPEND;
@@ -908,12 +912,19 @@ int ilen;
 	  if (slen)
 	    DoProcess(fore, &ibuf, &slen, 0);
 	  if (--ilen == 0)
+	  {
 	    D_ESCseen = ktab;
+	    WindowChanged(fore, 'E');
+	  }
 	}
       if (ilen <= 0)
         return;
       ktabp = D_ESCseen ? D_ESCseen : ktab;
-      D_ESCseen = 0;
+      if (D_ESCseen)
+        {
+          D_ESCseen = 0;
+          WindowChanged(fore, 'E');
+        }
       ch = (unsigned char)*s;
 
       /* 
@@ -1211,6 +1222,12 @@ int key;
   msgok = display && !*rc_name;
   switch(nr)
     {
+    case RC_SEARCH:
+      if (!*args)
+        InputSearch();
+      else
+        SearchFin(args[0], strlen(args[0]), NULL);
+      break;
     case RC_SELECT:
       if (!*args)
         InputSelect();
@@ -1831,7 +1848,7 @@ int key;
       Activate(-1);
       break;
     case RC_WINDOWS:
-      ShowWindows(-1);
+      ShowWindows(act,-1);
       break;
     case RC_VERSION:
       OutputMsg(0, "screen %s", version);
@@ -1863,10 +1880,18 @@ int key;
 	    }
 	  if (D_ESCseen != ktab || ktabp != ktab)
 	    {
-	      D_ESCseen = ktabp;
+	      if (D_ESCseen != ktabp)
+	        {
+	          D_ESCseen = ktabp;
+	          WindowChanged(fore, 'E');
+	        }
 	      break;
 	    }
-	  D_ESCseen = 0;
+	  if (D_ESCseen)
+	    {
+	      D_ESCseen = 0;
+	      WindowChanged(fore, 'E');
+	    }
 	}
       /* FALLTHROUGH */
     case RC_OTHER:
@@ -2762,6 +2787,17 @@ int key;
         (void)ParseOnOff(act, &nwin_default.lflag);
       break;
 #endif
+    case RC_DEFAKAARGS:
+      if(!args[0])
+      {
+        char buf[256];
+        sprintf(buf, "current displayed autoaka arguments: %d", defakaargs);
+        Msg(0, buf);
+        break;
+      }
+      Msg(0, "displayed autoaka arguments set to: %s", args[0]);
+      defakaargs=atoi(args[0]);
+      break;
     case RC_DEFFLOW:
       if (args[0] && args[1] && args[1][0] == 'i')
 	{
@@ -4475,7 +4511,6 @@ int key;
 	  break;
     }
 }
-#undef OutputMsg
 
 void
 DoCommand(argv, argl) 
@@ -5090,12 +5125,12 @@ int n;
   debug1("SwitchWindow %d\n", n);
   if (n < 0 || n >= maxwin)
     {
-      ShowWindows(-1);
+      ShowWindows(NULL,-1);
       return;
     }
   if ((p = wtab[n]) == 0)
     {
-      ShowWindows(n);
+      ShowWindows(NULL,n);
       return;
     }
   if (display == 0)
@@ -5507,7 +5542,8 @@ struct win *p;
 }
 
 void
-ShowWindows(where)
+ShowWindows(act,where)
+struct action *act;
 int where;
 {
   char buf[1024];
@@ -5529,7 +5565,10 @@ int where;
     }
   else
     ss = buf;
-  Msg(0, "%s", ss);
+  if(act)
+    OutputMsg(0, "%s", ss);
+  else
+    Msg(0, "%s", ss);
 }
 
 static void
@@ -5837,11 +5876,42 @@ char *data;	/* dummy */
     }
 }
 
-    
+/*
+ * Search for a window title pattern.
+ * If we find any, switch to the first (which is the last used one)
+ *                              -- Fernando Vezzosi <fv@linuxvar.it>
+ */
+static void
+SearchFin(buf, len, data)
+char *buf;
+int len;
+char *data;
+{
+  int i=0;
+  struct win *wptr;
+  if(!len || !display)
+    return;
+
+  for(wptr=windows; wptr; wptr=wptr->w_next, i++){
+    if(strstr(wptr->w_title, buf)){
+      SwitchWindow(wptr->w_number);
+/*      Msg(0, "Found, crossed %d windows", i);*/
+      return;
+    }
+  }
+  Msg(0, "Pattern '%s' not found [%d windows]", buf, i);
+}
+
 static void
 InputSelect()
 {
   Input("Switch to window: ", 20, INP_COOKED, SelectFin, NULL, 0);
+}
+
+static void
+InputSearch()
+{
+  Input("Search: ", 100, INP_COOKED, SearchFin, NULL, 0);
 }
 
 static char setenv_var[31];
@@ -6435,6 +6505,7 @@ int i;
       if (act->nr != RC_ILLEGAL)
 	{
 	  D_ESCseen = 0;
+	  WindowChanged(fore, 'E');
           DoAction(act, i + 256);
 	  return 0;
 	}
@@ -6460,7 +6531,11 @@ int i;
 
   if (discard && (!act || act->nr != RC_COMMAND))
     {
-      D_ESCseen = 0;
+      if (D_ESCseen)
+        {
+          D_ESCseen = 0;
+          WindowChanged(fore, 'E');
+        }
       return 0;
     }
   D_mapdefault = 0;
@@ -7207,3 +7282,5 @@ struct mchar *mc;
   debug2("ApplyAttrColor - %02x %02x\n", mc->attr, i);
 #endif
 }
+
+#undef OutputMsg

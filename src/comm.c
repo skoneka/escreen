@@ -132,6 +132,7 @@ struct comm comms[RC_LAST + 1] =
   { "crlf",		ARGS_01 },
 #endif
   { "debug",		ARGS_01 },
+  { "defakaargs",	ARGS_01 },
 #ifdef AUTO_NUKE
   { "defautonuke",	ARGS_1 },
 #endif
@@ -194,7 +195,7 @@ struct comm comms[RC_LAST + 1] =
   { "focus",		NEED_DISPLAY|ARGS_01 },
   { "focusminsize",	ARGS_02 },
   { "gr",		NEED_FORE|ARGS_01 },
-  { "group",            NEED_FORE|ARGS_01 },
+  { "group",            CAN_QUERY|NEED_FORE|ARGS_01 },
   { "hardcopy",		NEED_FORE|ARGS_012 },
   { "hardcopy_append",	ARGS_1 },
   { "hardcopydir",	ARGS_01 },
@@ -286,6 +287,7 @@ struct comm comms[RC_LAST + 1] =
 #ifdef COPY_PASTE
   { "scrollback",	NEED_FORE|ARGS_1 },
 #endif
+  { "search",           ARGS_1 },
   { "select",		CAN_QUERY|ARGS_01 },
   { "sessionname",	ARGS_01 },
   { "setenv",		ARGS_012 },

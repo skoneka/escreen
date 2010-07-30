@@ -2835,6 +2835,13 @@ int rec;
             p += strlen(p) - 1;
           }
           break;
+    case 'E':
+      p--;
+      if (display && D_ESCseen)
+      {
+        qmflag = 1;
+      }
+      break;
 	case 'F':
 	  p--;
 	  /* small hack */

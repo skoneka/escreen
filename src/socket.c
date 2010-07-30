@@ -1451,7 +1451,7 @@ struct msg *m;
   Activate(0);
   ResetIdle();
   if (!D_fore && !noshowwin)
-    ShowWindows(-1);
+    ShowWindows(NULL,-1);
   if (displays->d_next == 0 && console_window)
     {
       if (TtyGrabConsole(console_window->w_ptyfd, 1, "reattach") == 0)
