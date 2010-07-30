@@ -2984,13 +2984,13 @@ int rec;
 	      numpad++;
 	    }
 	  break;
-        case 'x':
-          {
-            int number_of_windows = NumberOfWindows((*s == 'w' ? 0 : 1) | (longflg ? 0 : 2) | (plusflg ? 4 : 0) | (minusflg ? 8 : 0));
-            sprintf(p, "%d", number_of_windows);
-            p += strlen(p) - 1;
-          }
-          break;
+    case 'x':
+      {
+        int number_of_windows = NumberOfWindows((*s == 'w' ? 0 : 1) | (longflg ? 0 : 2) | (plusflg ? 4 : 0) | (minusflg ? 8 : 0));
+        sprintf(p, "%d", number_of_windows);
+        p += strlen(p) - 1;
+      }
+      break;
 	case 'n':
 	  s++;
 	  /* FALLTHROUGH */

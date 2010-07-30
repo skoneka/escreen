@@ -5462,7 +5462,7 @@ int flags;
   int number_of_windows = 1;
   struct win **pp, *p;
 
-  for (pp = wtab; pp < wtab + MAXWIN; pp++)
+/*   for (pp = wtab; pp < wtab + MAXWIN; pp++)
     {
       if ((p = *pp) == 0)
 	continue;
@@ -5471,7 +5471,7 @@ int flags;
       if (D_fore && D_fore->w_group != p->w_group)
 	continue;
       number_of_windows++;
-    }
+    } */
   return number_of_windows;
 }
 
