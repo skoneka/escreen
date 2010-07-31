@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/267/trunk/config/patches/sc/alias
+END
+0004-Tyop.-Fixes-a-crash-after-unaliasing-a-bind.patch
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/!svn/ver/267/trunk/config/patches/sc/alias/0004-Tyop.-Fixes-a-crash-after-unaliasing-a-bind.patch
+END
+0006-Check-for-alias-in-idle-callback.patch
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/267/trunk/config/patches/sc/alias/0006-Check-for-alias-in-idle-callback.patch
+END
+0005-Fix-one-aliasing-bug.patch
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/267/trunk/config/patches/sc/alias/0005-Fix-one-aliasing-bug.patch
+END
+0003-Overhaul-the-aliasing-system.patch
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/267/trunk/config/patches/sc/alias/0003-Overhaul-the-aliasing-system.patch
+END
+0001-Do-not-overwrite-format-until-format-has-changed-in.patch
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/267/trunk/config/patches/sc/alias/0001-Do-not-overwrite-format-until-format-has-changed-in.patch
+END
+0001-Allow-setting-aliases-for-complex-commands.patch
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/267/trunk/config/patches/sc/alias/0001-Allow-setting-aliases-for-complex-commands.patch
+END
+0002-Fix-memory-corruption-when-unaliasing-a-command.patch
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/267/trunk/config/patches/sc/alias/0002-Fix-memory-corruption-when-unaliasing-a-command.patch
+END

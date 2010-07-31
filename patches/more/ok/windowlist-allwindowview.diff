@@ -1,0 +1,13 @@
+diff --git a/src/list_window.c b/src/list_window.c
+index 4fd65d0..41e8947 100644
+--- a/src/list_window.c
++++ b/src/list_window.c
+@@ -345,7 +345,7 @@ gl_Window_input(struct ListData *ldata, char **inp, int *len)
+ 	  display_windows(1, order, NULL);
+ 	  *len = 0;
+ 	}
+-      else if (!wdata->nested)
++      if (!wdata->nested)
+ 	{
+ 	  wdata->nested = 1;
+ 	  glist_remove_rows(ldata);

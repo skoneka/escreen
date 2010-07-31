@@ -1,0 +1,90 @@
+diff --git a/src/extern.h b/src/extern.h
+index 2b9722e..31a5f8a 100644
+--- a/src/extern.h
++++ b/src/extern.h
+@@ -209,7 +209,7 @@ extern int   Parse __P((char *, int, char **, int *));
+ extern void  SetEscape __P((struct acluser *, int, int));
+ extern void  DoScreen __P((char *, char **));
+ extern int   IsNumColon __P((char *, int, char *, int));
+-extern void  ShowWindows __P((int));
++extern void  ShowWindows __P((struct action *,int));
+ extern char *AddWindows __P((char *, int, int, int));
+ extern char *AddWindowFlags __P((char *, int, struct win *));
+ extern char *AddOtherUsers __P((char *, int, struct win *));
+diff --git a/src/process.c b/src/process.c
+index 27deeca..4ec6e3b 100644
+--- a/src/process.c
++++ b/src/process.c
+@@ -1848,7 +1848,7 @@ int key;
+       Activate(-1);
+       break;
+     case RC_WINDOWS:
+-      ShowWindows(-1);
++      ShowWindows(act,-1);
+       break;
+     case RC_VERSION:
+       OutputMsg(0, "screen %s", version);
+@@ -4509,7 +4509,6 @@ int key;
+ 	  break;
+     }
+ }
+-#undef OutputMsg
+ 
+ void
+ DoCommand(argv, argl) 
+@@ -5124,12 +5123,12 @@ int n;
+   debug1("SwitchWindow %d\n", n);
+   if (n < 0 || n >= maxwin)
+     {
+-      ShowWindows(-1);
++      ShowWindows(NULL,-1);
+       return;
+     }
+   if ((p = wtab[n]) == 0)
+     {
+-      ShowWindows(n);
++      ShowWindows(NULL,n);
+       return;
+     }
+   if (display == 0)
+@@ -5541,7 +5540,8 @@ struct win *p;
+ }
+ 
+ void
+-ShowWindows(where)
++ShowWindows(act,where)
++struct action *act;
+ int where;
+ {
+   char buf[1024];
+@@ -5563,7 +5563,10 @@ int where;
+     }
+   else
+     ss = buf;
+-  Msg(0, "%s", ss);
++  if(act)
++    OutputMsg(0, "%s", ss);
++  else
++    Msg(0, "%s", ss);
+ }
+ 
+ static void
+@@ -7277,3 +7280,5 @@ struct mchar *mc;
+   debug2("ApplyAttrColor - %02x %02x\n", mc->attr, i);
+ #endif
+ }
++
++#undef OutputMsg
+diff --git a/src/socket.c b/src/socket.c
+index 940034d..8ade628 100644
+--- a/src/socket.c
++++ b/src/socket.c
+@@ -1451,7 +1451,7 @@ struct msg *m;
+   Activate(0);
+   ResetIdle();
+   if (!D_fore && !noshowwin)
+-    ShowWindows(-1);
++    ShowWindows(NULL,-1);
+   if (displays->d_next == 0 && console_window)
+     {
+       if (TtyGrabConsole(console_window->w_ptyfd, 1, "reattach") == 0)

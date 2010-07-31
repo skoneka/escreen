@@ -1,0 +1,18 @@
+diff --git a/src/screen.c b/src/screen.c
+index 3dde3b4..5226e5a 100644
+--- a/src/screen.c
++++ b/src/screen.c
+@@ -2835,6 +2835,13 @@ int rec;
+             p += strlen(p) - 1;
+           }
+           break;
++    case 'E':
++      p--;
++      if (display && D_ESCseen)
++      {
++        qmflag = 1;
++      }
++      break;
+        case 'F':
+          p--;
+          /* small hack */

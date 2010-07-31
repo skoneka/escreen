@@ -1,0 +1,61 @@
+diff --git a/src/extern.h b/src/extern.h
+index 0eb811a..a0c0249 100644
+--- a/src/extern.h
++++ b/src/extern.h
+@@ -207,6 +207,7 @@ extern int   IsNumColon __P((char *, int, char *, int));
+ extern void  ShowWindows __P((struct action *,int));
+ extern char *AddWindows __P((char *, int, int, int));
+ extern char *AddWindowFlags __P((char *, int, struct win *));
++extern int   NumberOfWindows __P((int));
+ extern char *AddOtherUsers __P((char *, int, struct win *));
+ extern int   WindowByNoN __P((char *));
+ extern struct win *FindNiceWindow __P((struct win *, char *));
+diff --git a/src/process.c b/src/process.c
+index 0e835f0..eb625dc 100644
+--- a/src/process.c
++++ b/src/process.c
+@@ -5317,6 +5317,26 @@ int where;
+   return ss;
+ }
+ 
++int
++NumberOfWindows(flags)
++int flags;
++{
++  int number_of_windows = 1;
++  struct win **pp, *p;
++
++  for (pp = wtab; pp < wtab + MAXWIN; pp++)
++    {
++      if ((p = *pp) == 0)
++	continue;
++      if ((flags & 1) && display && p == D_fore)
++	continue;
++      if (D_fore && D_fore->w_group != p->w_group)
++	continue;
++      number_of_windows++;
++    }
++  return number_of_windows;
++}
++
+ char *
+ AddWindowFlags(buf, len, p)
+ char *buf;
+diff --git a/src/screen.c b/src/screen.c
+index edec34a..38b512a 100644
+--- a/src/screen.c
++++ b/src/screen.c
+@@ -2955,6 +2955,13 @@ int rec;
+ 	      numpad++;
+ 	    }
+ 	  break;
++        case 'x':
++          {
++            int number_of_windows = NumberOfWindows((*s == 'w' ? 0 : 1) | (longflg ? 0 : 2) | (plusflg ? 4 : 0) | (minusflg ? 8 : 0));
++            sprintf(p, "%d", number_of_windows);
++            p += strlen(p) - 1;
++          }
++          break;
+ 	case 'n':
+ 	  s++;
+ 	  /* FALLTHROUGH */

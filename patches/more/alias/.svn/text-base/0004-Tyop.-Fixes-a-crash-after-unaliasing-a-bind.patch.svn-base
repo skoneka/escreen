@@ -1,0 +1,25 @@
+From 59e95db4863610700689e56fe01301019d2446e8 Mon Sep 17 00:00:00 2001
+From: Sadrul Habib Chowdhury <sadrul@users.sourceforge.net>
+Date: Wed, 22 Oct 2008 08:03:36 -0400
+Subject: [PATCH] Tyop. Fixes a crash after unaliasing a bind
+
+---
+ src/process.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/process.c b/src/process.c
+index 49504d4..a4b4a06 100644
+--- a/src/process.c
++++ b/src/process.c
+@@ -1111,7 +1111,7 @@ int key;
+   if (nr > RC_LAST)
+     {
+       struct alias *alias = FindAliasnr(nr);
+-      if (nr)
++      if (alias)
+ 	{
+ 	  DoAlias(&alias->name, NULL);
+ 	  return;
+-- 
+1.5.6.2
+

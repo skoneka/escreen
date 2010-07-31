@@ -1,0 +1,360 @@
+diff --git a/src/ChangeLog b/src/ChangeLog
+index c2e356f..1b61144 100644
+--- a/src/ChangeLog
++++ b/src/ChangeLog
+@@ -53,6 +53,8 @@ Version 4.1.0 (??/??/20??):
+     '%+p' expands to the PID of the frontend (display).
+   * '%S' in caption/hardstatus string expands to the session name.
+   * '%P' in the caption string evaluates to true if the region is in copy mode.
++  * '%E' in the caption string evaluates to true if the session has seen the
++    escape character.
+ 
+   Window List:
+   * Nested views when there are window groups (with 'windowlist -g').
+diff --git a/src/ansi.c b/src/ansi.c
+index 46e3e01..80ef6e1 100644
+--- a/src/ansi.c
++++ b/src/ansi.c
+@@ -66,6 +66,7 @@ int visual_bell = 0;
+ int use_hardstatus = 1;		/* display status line in hs */
+ char *printcmd = 0;
+ int use_altscreen = 0;		/* enable alternate screen support? */
++int defakaargs = 0;         /* number of command arguments displayed by autoaka */
+ 
+ unsigned char *blank;		/* line filled with spaces */
+ unsigned char *null;		/* line filled with '\0' */
+@@ -2290,13 +2291,21 @@ FindAKA()
+       else
+ 	wp->w_autoaka = 0;
+       line = cp;
+-      while (len && *cp != ' ')
++      int aka_word_counter=0;
++      int aka_spaces_counter=0;
++      while (len && aka_spaces_counter < 2 && aka_word_counter <= defakaargs)
+ 	{
++      if (*cp == ' ')
++      {
++        aka_spaces_counter++;
++        aka_word_counter++;
++      }
++      else aka_spaces_counter = 0;
+ 	  if (*cp++ == '/')
+-	    line = cp;
++        line = cp;
+ 	  len--;
+ 	}
+-      ChangeAKA(wp, (char *)line, cp - line);
++      ChangeAKA(wp, (char *)line, cp - line - aka_spaces_counter);
+     }
+   else
+     wp->w_autoaka = 0;
+diff --git a/src/comm.c b/src/comm.c
+index 5f4af8a..0c56a0e 100644
+--- a/src/comm.c
++++ b/src/comm.c
+@@ -132,6 +132,7 @@ struct comm comms[RC_LAST + 1] =
+   { "crlf",		ARGS_01 },
+ #endif
+   { "debug",		ARGS_01 },
++  { "defakaargs",	ARGS_01 },
+ #ifdef AUTO_NUKE
+   { "defautonuke",	ARGS_1 },
+ #endif
+@@ -286,6 +287,7 @@ struct comm comms[RC_LAST + 1] =
+ #ifdef COPY_PASTE
+   { "scrollback",	NEED_FORE|ARGS_1 },
+ #endif
++  { "search",           ARGS_1 },
+   { "select",		CAN_QUERY|ARGS_01 },
+   { "sessionname",	ARGS_01 },
+   { "setenv",		ARGS_012 },
+diff --git a/src/doc/screen.1 b/src/doc/screen.1
+index ff2fe82..ce9365d 100644
+--- a/src/doc/screen.1
++++ b/src/doc/screen.1
+@@ -415,6 +415,8 @@ of the command.
+ The following table shows the default key bindings:
+ .IP "\fBC-a '\fP	(select)"
+ Prompt for a window name or number to switch to.
++.IP "\fBC-a /\fP (search)"
++Prompt for a window name to search.
+ .IP "\fBC-a ""\fP	(windowlist -b)"
+ Present a list of all windows for selection.
+ .IP "\fBC-a 0\fP	(select 0)"
+@@ -2909,6 +2911,14 @@ See also the \*Qdefscrollback\*U command and use \*QC-a i\*U to view the
+ current setting.
+ .sp
+ .ne 3
++.BR "search " [ \fIText ]
++.PP
++Search for \fIText\fP in window names/titles.
++If any windows which contains \fIText\fP in the name are found, switch to
++the last used one.  The parameter is optional and if omitted, you get
++prompted for a search text.
++.sp
++.ne 3
+ .BR "select " [ \fIWindowID ]
+ .PP
+ Switch to the window identified by \fIWindowID\fP.
+@@ -3688,6 +3698,8 @@ current time HH:MM in 12h format
+ day number
+ .IP D
+ weekday name
++.IP E
++sets %? to true if the session has seen an escape character
+ .IP f
+ flags of the window
+ .IP F
+diff --git a/src/doc/screen.texinfo b/src/doc/screen.texinfo
+index 539f23d..1ede270 100644
+--- a/src/doc/screen.texinfo
++++ b/src/doc/screen.texinfo
+@@ -5433,6 +5433,8 @@ current time @code{HH:MM} in 12h format
+ day number
+ @item D
+ weekday name
++@item E
++sets %? to true if the session has seen an escape character
+ @item f
+ flags of the window. @xref{Windows}, for meanings of the various flags.
+ @item F
+diff --git a/src/extern.h b/src/extern.h
+index 2b9722e..2dee55d 100644
+--- a/src/extern.h
++++ b/src/extern.h
+@@ -212,6 +212,7 @@ extern int   IsNumColon __P((char *, int, char *, int));
+ extern void  ShowWindows __P((int));
+ extern char *AddWindows __P((char *, int, int, int));
+ extern char *AddWindowFlags __P((char *, int, struct win *));
++extern int   NumberOfWindows __P((int));
+ extern char *AddOtherUsers __P((char *, int, struct win *));
+ extern int   WindowByNoN __P((char *));
+ extern struct win *FindNiceWindow __P((struct win *, char *));
+diff --git a/src/process.c b/src/process.c
+index da9188d..8dae920 100644
+--- a/src/process.c
++++ b/src/process.c
+@@ -86,6 +86,7 @@ extern int defmousetrack;
+ extern int ZombieKey_destroy;
+ extern int ZombieKey_resurrect;
+ extern int ZombieKey_onerror;
++extern int defakaargs;
+ #ifdef AUTO_NUKE
+ extern int defautonuke;
+ #endif
+@@ -142,6 +143,8 @@ static char **SaveArgs __P((char **));
+ static int  IsNum __P((char *, int));
+ static void Colonfin __P((char *, int, char *));
+ static void InputSelect __P((void));
++static void InputSearch __P((void));
++static void SearchFin __P((char *, int, char *));
+ static void InputSetenv __P((char *));
+ static void InputAKA __P((void));
+ #ifdef MULTIUSER
+@@ -542,6 +545,7 @@ InitKeytab()
+     }
+ #endif
+ 
++  ktab['/'].nr = RC_SEARCH;
+   ktab['h'].nr = RC_HARDCOPY;
+ #ifdef BSDJOBS
+   ktab['z'].nr = ktab[Ctrl('z')].nr = RC_SUSPEND;
+@@ -908,12 +912,19 @@ int ilen;
+ 	  if (slen)
+ 	    DoProcess(fore, &ibuf, &slen, 0);
+ 	  if (--ilen == 0)
++	  {
+ 	    D_ESCseen = ktab;
++	    WindowChanged(fore, 'E');
++	  }
+ 	}
+       if (ilen <= 0)
+         return;
+       ktabp = D_ESCseen ? D_ESCseen : ktab;
+-      D_ESCseen = 0;
++      if (D_ESCseen)
++        {
++          D_ESCseen = 0;
++          WindowChanged(fore, 'E');
++        }
+       ch = (unsigned char)*s;
+ 
+       /* 
+@@ -1211,6 +1222,12 @@ int key;
+   msgok = display && !*rc_name;
+   switch(nr)
+     {
++    case RC_SEARCH:
++      if (!*args)
++        InputSearch();
++      else
++        SearchFin(args[0], strlen(args[0]), NULL);
++      break;
+     case RC_SELECT:
+       if (!*args)
+         InputSelect();
+@@ -1863,10 +1880,18 @@ int key;
+ 	    }
+ 	  if (D_ESCseen != ktab || ktabp != ktab)
+ 	    {
+-	      D_ESCseen = ktabp;
++	      if (D_ESCseen != ktabp)
++	        {
++	          D_ESCseen = ktabp;
++	          WindowChanged(fore, 'E');
++	        }
+ 	      break;
+ 	    }
+-	  D_ESCseen = 0;
++	  if (D_ESCseen)
++	    {
++	      D_ESCseen = 0;
++	      WindowChanged(fore, 'E');
++	    }
+ 	}
+       /* FALLTHROUGH */
+     case RC_OTHER:
+@@ -2755,6 +2780,17 @@ int key;
+         (void)ParseOnOff(act, &nwin_default.lflag);
+       break;
+ #endif
++    case RC_DEFAKAARGS:
++      if(!args[0])
++      {
++        char buf[256];
++        sprintf(buf, "current displayed autoaka arguments: %d", defakaargs);
++        Msg(0, buf);
++        break;
++      }
++      Msg(0, "displayed autoaka arguments set to: %s", args[0]);
++      defakaargs=atoi(args[0]);
++      break;
+     case RC_DEFFLOW:
+       if (args[0] && args[1] && args[1][0] == 'i')
+ 	{
+@@ -5413,6 +5449,26 @@ int where;
+   return ss;
+ }
+ 
++int
++NumberOfWindows(flags)
++int flags;
++{
++  int number_of_windows = 1;
++  struct win **pp, *p;
++
++  for (pp = wtab; pp < wtab + MAXWIN; pp++)
++    {
++      if ((p = *pp) == 0)
++	continue;
++      if ((flags & 1) && display && p == D_fore)
++	continue;
++      if (D_fore && D_fore->w_group != p->w_group)
++	continue;
++      number_of_windows++;
++    }
++  return number_of_windows;
++}
++
+ char *
+ AddWindowFlags(buf, len, p)
+ char *buf;
+@@ -5830,13 +5886,44 @@ char *data;	/* dummy */
+     }
+ }
+ 
+-    
++/*
++ * Search for a window title pattern.
++ * If we find any, switch to the first (which is the last used one)
++ *                              -- Fernando Vezzosi <fv@linuxvar.it>
++ */
++static void
++SearchFin(buf, len, data)
++char *buf;
++int len;
++char *data;
++{
++  int i=0;
++  struct win *wptr;
++  if(!len || !display)
++    return;
++
++  for(wptr=windows; wptr; wptr=wptr->w_next, i++){
++    if(strstr(wptr->w_title, buf)){
++      SwitchWindow(wptr->w_number);
++/*      Msg(0, "Found, crossed %d windows", i);*/
++      return;
++    }
++  }
++  Msg(0, "Pattern '%s' not found [%d windows]", buf, i);
++}
++
+ static void
+ InputSelect()
+ {
+   Input("Switch to window: ", 20, INP_COOKED, SelectFin, NULL, 0);
+ }
+ 
++static void
++InputSearch()
++{
++  Input("Search: ", 100, INP_COOKED, SearchFin, NULL,0);
++}
++
+ static char setenv_var[31];
+ 
+ 
+@@ -6428,6 +6515,7 @@ int i;
+       if (act->nr != RC_ILLEGAL)
+ 	{
+ 	  D_ESCseen = 0;
++	  WindowChanged(fore, 'E');
+           DoAction(act, i + 256);
+ 	  return 0;
+ 	}
+@@ -6453,7 +6541,11 @@ int i;
+ 
+   if (discard && (!act || act->nr != RC_COMMAND))
+     {
+-      D_ESCseen = 0;
++      if (D_ESCseen)
++        {
++          D_ESCseen = 0;
++          WindowChanged(fore, 'E');
++        }
+       return 0;
+     }
+   D_mapdefault = 0;
+diff --git a/src/screen.c b/src/screen.c
+index 3dde3b4..5226e5a 100644
+--- a/src/screen.c
++++ b/src/screen.c
+@@ -2835,6 +2835,13 @@ int rec;
+             p += strlen(p) - 1;
+           }
+           break;
++    case 'E':
++      p--;
++      if (display && D_ESCseen)
++      {
++        qmflag = 1;
++      }
++      break;
+ 	case 'F':
+ 	  p--;
+ 	  /* small hack */
+@@ -2977,6 +2984,13 @@ int rec;
+ 	      numpad++;
+ 	    }
+ 	  break;
++        case 'x':
++          {
++            int number_of_windows = NumberOfWindows((*s == 'w' ? 0 : 1) | (longflg ? 0 : 2) | (plusflg ? 4 : 0) | (minusflg ? 8 : 0));
++            sprintf(p, "%d", number_of_windows);
++            p += strlen(p) - 1;
++          }
++          break;
+ 	case 'n':
+ 	  s++;
+ 	  /* FALLTHROUGH */
