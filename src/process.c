@@ -4302,13 +4302,10 @@ int key;
 	  WindowChanged((struct win *)0, 'W');
 	  WindowChanged((struct win *)0, 0);
 	}
-      if (msgok)
-	{
-	  if (fore->w_group)
-	    OutputMsg(0, "window group is %d (%s)\n", fore->w_group->w_number, fore->w_group->w_title);
-	  else
-	    OutputMsg(0, "window belongs to no group");
-	}
+    if (fore->w_group)
+      OutputMsg(0, "window group is %d (%s)\n", fore->w_group->w_number, fore->w_group->w_title);
+    else
+      OutputMsg(0, "window belongs to no group");
       break;
     case RC_LAYOUT:
       if (!strcmp(args[0], "title"))
