@@ -1,0 +1,13 @@
+diff --git a/src/comm.c b/src/comm.c
+index 39ac359..e2be847 100644
+--- a/src/comm.c
++++ b/src/comm.c
+@@ -215,7 +215,7 @@ struct comm comms[RC_LAST + 1] =
+ #endif
+   { "kill",		NEED_FORE|ARGS_0 },
+   { "lastmsg",		CAN_QUERY|NEED_DISPLAY|ARGS_0 },
+-  { "layout",           ARGS_1|ARGS_ORMORE},
++  { "layout",           CAN_QUERY|ARGS_1|ARGS_ORMORE},
+   { "license",		NEED_LAYER|ARGS_0 },
+ #ifdef LOCK
+   { "lockscreen",	NEED_DISPLAY|ARGS_0 },
