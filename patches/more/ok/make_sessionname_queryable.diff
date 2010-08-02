@@ -1,0 +1,13 @@
+diff --git a/src/comm.c b/src/comm.c
+index c87f861..39ac359 100644
+--- a/src/comm.c
++++ b/src/comm.c
+@@ -290,7 +290,7 @@ struct comm comms[RC_LAST + 1] =
+ #endif
+   { "search",           ARGS_01 },
+   { "select",		CAN_QUERY|ARGS_01 },
+-  { "sessionname",	ARGS_01 },
++  { "sessionname",	CAN_QUERY|ARGS_01 },
+   { "setenv",		ARGS_012 },
+   { "setsid",		ARGS_1 },
+   { "shell",		ARGS_1 },
