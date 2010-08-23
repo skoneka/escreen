@@ -215,7 +215,7 @@ struct comm comms[RC_LAST + 1] =
 #endif
   { "kill",		NEED_FORE|ARGS_0 },
   { "lastmsg",		CAN_QUERY|NEED_DISPLAY|ARGS_0 },
-  { "layout",           ARGS_1|ARGS_ORMORE},
+  { "layout",           CAN_QUERY|ARGS_1|ARGS_ORMORE},
   { "license",		NEED_LAYER|ARGS_0 },
 #ifdef LOCK
   { "lockscreen",	NEED_DISPLAY|ARGS_0 },
