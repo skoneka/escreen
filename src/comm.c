@@ -234,7 +234,7 @@ struct comm comms[RC_LAST + 1] =
 #ifdef COPY_PASTE
   { "markkeys",		ARGS_1 },
 #endif
-  { "maxwin",		ARGS_01 },
+  { "maxwin",		CAN_QUERY|ARGS_01 },
   { "meta",		NEED_LAYER|ARGS_0 },
   { "monitor",		NEED_FORE|ARGS_01 },
   { "mousetrack",	NEED_DISPLAY | ARGS_01 },
