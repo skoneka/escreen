@@ -59,7 +59,7 @@ struct comm comms[RC_LAST + 1] =
   { "alias",	ARGS_12|ARGS_ORMORE },
   { "allpartial",	NEED_DISPLAY|ARGS_1 },
   { "altscreen",	ARGS_01 },
-  { "at",		ARGS_2|ARGS_ORMORE },
+  { "at",		CAN_QUERY|ARGS_2|ARGS_ORMORE },
 #ifdef COLOR
   { "attrcolor",	ARGS_12 },
 #endif

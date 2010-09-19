@@ -4297,8 +4297,9 @@ int key;
 	  if (args[0][0])
 	    {
 	      fore->w_group = WindowByName(*args);
+	      //fore->w_group = WindowByNumber(*args);
 	      if (fore->w_group == fore || (fore->w_group && fore->w_group->w_type != W_TYPE_GROUP))
-		fore->w_group = 0;
+	    fore->w_group = 0;
 	    }
 	  WindowChanged((struct win *)0, 'w');
 	  WindowChanged((struct win *)0, 'W');
@@ -5670,7 +5671,7 @@ ShowWindows(act,where)
 struct action *act;
 int where;
 {
-  char buf[1024];
+  char buf[2048];
   char *s, *ss;
 
   if (display && where == -1 && D_fore)

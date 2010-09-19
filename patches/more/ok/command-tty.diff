@@ -1,8 +1,8 @@
 diff --git a/src/comm.c b/src/comm.c
-index 0c56a0e..4c4ac0f 100644
+index 5f4af8a..7a9cd18 100644
 --- a/src/comm.c
 +++ b/src/comm.c
-@@ -315,6 +315,7 @@ struct comm comms[RC_LAST + 1] =
+@@ -313,6 +313,7 @@ struct comm comms[RC_LAST + 1] =
    { "terminfo",		ARGS_23 },
    { "time",		CAN_QUERY|ARGS_01 },
    { "title",		CAN_QUERY|NEED_FORE|ARGS_01 },
@@ -11,19 +11,21 @@ index 0c56a0e..4c4ac0f 100644
    { "unbindall",	ARGS_0 },
    { "unsetenv",		ARGS_1 },
 diff --git a/src/process.c b/src/process.c
-index 866ed8e..d2ed9d6 100644
+index da9188d..418e30d 100644
 --- a/src/process.c
 +++ b/src/process.c
-@@ -2686,6 +2686,13 @@ int key;
+@@ -2661,6 +2661,15 @@ int key;
        MakeTermcap((display == 0));
        debug("new termcap made\n");
        break;
 +    case RC_TTY:
-+      if(!args[0])
-+      {
-+        char buf[256];
-+        OutputMsg(0, "%s", fore->w_tty);
++      if(fore) {
++          char buf[256];
++          OutputMsg(0, "%s", fore->w_tty);
 +      }
++      else
++          OutputMsg(0, "none");
++
 +      break;
      case RC_ECHO:
        if (!msgok && (!rc_name || strcmp(rc_name, "-X")))
