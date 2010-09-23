@@ -1754,6 +1754,11 @@ int key;
         copy_reg_fn(&ch, 0, NULL);
       break;
 #endif
+    case RC_REGIONSIZE:
+       OutputMsg(0, "%d %d",D_forecv->c_xe-D_forecv->c_xs+1,D_forecv->c_ye-D_forecv->c_ys+1);
+       break;
+
+    
     case RC_REGISTER:
 #ifdef ENCODINGS
       i = fore ? fore->w_encoding : display ? display->d_encoding : 0;
@@ -2710,7 +2715,6 @@ int key;
       break;
     case RC_TTY:
       if(fore) {
-          char buf[256];
           OutputMsg(0, "%s", fore->w_tty);
       }
       else
