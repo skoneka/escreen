@@ -20,7 +20,6 @@ index da9188d..418e30d 100644
        break;
 +    case RC_TTY:
 +      if(fore) {
-+          char buf[256];
 +          OutputMsg(0, "%s", fore->w_tty);
 +      }
 +      else
