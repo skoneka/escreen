@@ -4291,6 +4291,11 @@ int key;
 	      else
 		sprintf(b[i], "%d", n);
 	    }
+	  if (D_layout)
+	    {
+	      D_layout->lay_focusminwidth = focusminwidth;
+	      D_layout->lay_focusminheight = focusminheight;
+	    }
           OutputMsg(0, "focus min size is %s %s\n", b[0], b[1]);
 	}
       break;

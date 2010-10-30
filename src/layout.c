@@ -33,6 +33,7 @@
 
 extern struct display *display;
 extern int captionalways;
+extern int focusminwidth, focusminheight;
 
 struct layout *layouts;
 struct layout *laytab[MAXLAY];
@@ -166,6 +167,8 @@ struct canvas *cv;
     }
   while (D_canvas.c_slperp)
     FreeCanvas(D_canvas.c_slperp);
+  focusminwidth = lay->lay_focusminwidth;
+  focusminheight = lay->lay_focusminheight;
   D_cvlist = 0;
   D_forecv = lay->lay_forecv;
   DupLayoutCv(&lay->lay_canvas, &D_canvas, 0);
