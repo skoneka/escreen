@@ -4280,24 +4280,21 @@ int key;
 	  else
             focusminheight = n;
 	}
-      if (msgok)
-	{
-	  char b[2][20];
-	  for (i = 0; i < 2; i++)
-	    {
-	      n = i == 0 ? focusminwidth : focusminheight;
-	      if (n == -1)
-		strcpy(b[i], "max");
-	      else
-		sprintf(b[i], "%d", n);
-	    }
-	  if (D_layout)
-	    {
-	      D_layout->lay_focusminwidth = focusminwidth;
-	      D_layout->lay_focusminheight = focusminheight;
-	    }
-          OutputMsg(0, "focus min size is %s %s\n", b[0], b[1]);
-	}
+	char b[2][20];
+	for (i = 0; i < 2; i++)
+	  {
+	    n = i == 0 ? focusminwidth : focusminheight;
+	    if (n == -1)
+	      strcpy(b[i], "max");
+	    else
+	      sprintf(b[i], "%d", n);
+	  }
+	if (D_layout)
+	  {
+	    D_layout->lay_focusminwidth = focusminwidth;
+	    D_layout->lay_focusminheight = focusminheight;
+	  }
+        OutputMsg(0, "focus min size is %s %s\n", b[0], b[1]);
       break;
     case RC_GROUP:
       if (*args)
