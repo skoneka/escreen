@@ -3137,14 +3137,16 @@ int key;
       (void)ParseNum(act, &nwin_default.histheight);
       break;
     case RC_SCROLLBACK:
-      if (flayer->l_layfn == &MarkLf)
-	{
-	  OutputMsg(0, "Cannot resize scrollback buffer in copy/scrollback mode.");
-	  break;
-	}
-      (void)ParseNum(act, &n);
-      ChangeWindowSize(fore, fore->w_width, fore->w_height, n);
-      if (msgok)
+    if (*args != 0)
+	    {
+	  if (flayer->l_layfn == &MarkLf)
+	    {
+	      OutputMsg(0, "Cannot resize scrollback buffer in copy/scrollback mode.");
+	      break;
+	    }
+	  (void)ParseNum(act, &n);
+	  ChangeWindowSize(fore, fore->w_width, fore->w_height, n);
+      }
 	OutputMsg(0, "scrollback set to %d", fore->w_histheight);
       break;
 #endif
