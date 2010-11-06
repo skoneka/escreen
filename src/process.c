@@ -2714,11 +2714,17 @@ int key;
       debug("new termcap made\n");
       break;
     case RC_TTY:
-      if(fore) {
-          OutputMsg(0, "%s", fore->w_tty);
-      }
+      if(fore) 
+        { 
+          if (fore->w_type == W_TYPE_TELNET)
+            OutputMsg(0, "telnet");
+          else if (fore->w_type == W_TYPE_GROUP)
+            OutputMsg(0, "group");
+          else
+            OutputMsg(0, "%s", fore->w_tty);
+        }
       else
-          OutputMsg(0, "none");
+        OutputMsg(0, "none");
 
       break;
     case RC_ECHO:
