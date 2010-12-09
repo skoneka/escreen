@@ -452,6 +452,23 @@ int dump;
       if (hardcopy_append && !access(fn, W_OK))
 	mode = "a";
       break;
+    case DUMP_SCSWINDOW:
+      if (fore == 0)
+        return;
+      else if (fn == 0)
+        return;
+      mode = (!access(fn, W_OK)) ? "a" : "w";
+      break;
+    case DUMP_SCSWINDOWFULL:
+      if (fore == 0)
+        return;
+      if (fn && *fn && strlen(fn) < sizeof(fnbuf) - 21)
+        sprintf(fnbuf, "%s/win_%d", fn, fore->w_number);
+      else
+        return;
+      fn = fnbuf;
+      mode = "w";
+      break;
 #ifdef COPY_PASTE
     case DUMP_EXCHANGE:
       if (fn == 0)
@@ -550,6 +567,30 @@ int dump;
 		  putc('\n', f);
 		}
 	      break;
+            case DUMP_SCSWINDOW:
+            case DUMP_SCSWINDOWFULL:
+                {
+                  char buf[1024];
+                  char *tty=NULL;
+                  if (!fore)
+                    break;
+                  if (fore->w_type == W_TYPE_TELNET)
+                    tty=SaveStr("telnet");
+                  else if (fore->w_type == W_TYPE_GROUP)
+                    tty=SaveStr("group");
+                  else
+                    tty = (dump == DUMP_SCSWINDOW) ? fore->w_tty : "basic";
+                  if (dump == DUMP_SCSWINDOW)
+                    {
+                      sprintf(buf,"%d %d %s\n",fore->w_number,(fore->w_group) ? fore->w_group->w_number: -1, tty);
+                    }
+                  else
+                    {
+                      sprintf(buf,"%d\n%s\n%d %s\n%s\n%s\n%s\n%d\n",fore->w_number,"TIME", (fore->w_group) ? fore->w_group->w_number: -1, (fore->w_group) ? fore->w_group->w_title : "", tty ,fore->w_title,  fore->w_pwin ? fore->w_pwin->p_cmd : "-1", fore->w_histheight);
+                    }
+                  fprintf(f, buf);
+                }
+              break;
 	    case DUMP_TERMCAP:
 	      if ((p = index(MakeTermcap(fore->w_aflag), '=')) != NULL)
 		{
@@ -586,6 +627,10 @@ int dump;
 	  Msg(0, "Screen image %s to \"%s\".",
 	      (*mode == 'a') ? "appended" : "written", fn);
 	  break;
+        case DUMP_SCSWINDOW:
+        case DUMP_SCSWINDOWFULL:
+          Msg(0, "screen-session window dump written to \"%s\".",fn);
+          break;
 #ifdef COPY_PASTE
 	case DUMP_EXCHANGE:
 	  Msg(0, "Copybuffer written to \"%s\".", fn);

@@ -1299,6 +1299,21 @@ int key;
     case RC_DUMPTERMCAP:
       WriteFile(user, (char *)0, DUMP_TERMCAP);
       break;
+    case RC_DUMPSCSWINDOW:
+        {
+          int mode;
+          if (!strcmp(args[1],"-F"))
+            mode = DUMP_SCSWINDOWFULL;
+          else if (!strcmp(args[1],"-N"))
+            mode = DUMP_SCSWINDOW;
+          else
+            {
+              OutputMsg(0, "Usage: ");
+              break;
+            }
+            WriteFile(user, args[0], mode);
+        }
+      break;
     case RC_HARDCOPY:
       {
 	int mode = DUMP_HARDCOPY;
@@ -1757,8 +1772,6 @@ int key;
     case RC_REGIONSIZE:
        OutputMsg(0, "%d %d",D_forecv->c_xe-D_forecv->c_xs+1,D_forecv->c_ye-D_forecv->c_ys+1);
        break;
-
-    
     case RC_REGISTER:
 #ifdef ENCODINGS
       i = fore ? fore->w_encoding : display ? display->d_encoding : 0;

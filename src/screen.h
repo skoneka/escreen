@@ -270,6 +270,8 @@ struct msg
 #define DUMP_HARDCOPY	1
 #define DUMP_EXCHANGE	2
 #define DUMP_SCROLLBACK 3
+#define DUMP_SCSWINDOW  7
+#define DUMP_SCSWINDOWFULL 8
 
 #define SILENCE_OFF	0 /* Not checking for silence */
 #define SILENCE_ON	1 /* Window being monitored for silence */
