@@ -1299,20 +1299,30 @@ int key;
     case RC_DUMPTERMCAP:
       WriteFile(user, (char *)0, DUMP_TERMCAP);
       break;
-    case RC_DUMPSCSWINDOW:
+    case RC_DUMPSCREEN:
+      if (!strcmp(args[0], "window"))
         {
           int mode;
-          if (!strcmp(args[1],"-F"))
+          if (!strcmp(args[2],"-F"))
             mode = DUMP_SCSWINDOWFULL;
-          else if (!strcmp(args[1],"-N"))
+          else if (!strcmp(args[2],"-N"))
             mode = DUMP_SCSWINDOW;
           else
             {
               OutputMsg(0, "Usage: ");
               break;
             }
-            WriteFile(user, args[0], mode);
+            WriteFile(user, args[1], mode);
         }
+      else if (!strcmp(args[0], "layout"))
+	{
+	  if (!display || !D_layout)
+	    OutputMsg(0, "Must have a display and a layout for 'dumpscreen layout'.");
+	  else if (!LayoutDumpCanvasScs(&D_canvas, args[1] ? args[1] : "layout-dump-size"))
+	    OutputMsg(errno, "Error dumping layout size.");
+	  else
+	    OutputMsg(0, "Layout dumped to \"%s\"", args[1] ? args[1] : "layout-dump-size");
+	}
       break;
     case RC_HARDCOPY:
       {
