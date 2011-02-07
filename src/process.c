@@ -1303,16 +1303,11 @@ int key;
       if (!strcmp(args[0], "window"))
         {
           int mode;
-          if (!strcmp(args[2],"-F"))
+          if (args[2] && !strcmp(args[2],"-F"))
             mode = DUMP_SCSWINDOWFULL;
-          else if (!strcmp(args[2],"-N"))
-            mode = DUMP_SCSWINDOW;
           else
-            {
-              OutputMsg(0, "Usage: ");
-              break;
-            }
-            WriteFile(user, args[1], mode);
+            mode = DUMP_SCSWINDOW;
+          WriteFile(user, args[1], mode);
         }
       else if (!strcmp(args[0], "layout"))
 	{
@@ -1323,6 +1318,8 @@ int key;
 	  else
 	    OutputMsg(0, "Layout dumped to \"%s\"", args[1] ? args[1] : "layout-dump-size");
 	}
+      else
+        OutputMsg(0, "Usage: dumpscreen [window|layout] filename [-F]");
       break;
     case RC_HARDCOPY:
       {

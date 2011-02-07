@@ -586,7 +586,7 @@ int dump;
                     }
                   else
                     {
-                      sprintf(buf,"%d\n%s\n%d %s\n%s\n%s\n%s\n%d\n",fore->w_number,"TIME", (fore->w_group) ? fore->w_group->w_number: -1, (fore->w_group) ? fore->w_group->w_title : "", tty ,fore->w_title,  fore->w_pwin ? fore->w_pwin->p_cmd : "-1", fore->w_histheight);
+                      sprintf(buf,"%d\n%s\n%d %s\n%s\n%s\n%s\n%d\n",fore->w_number,"\0", (fore->w_group) ? fore->w_group->w_number: -1, (fore->w_group) ? fore->w_group->w_title : "", tty ,fore->w_title,  fore->w_pwin ? fore->w_pwin->p_cmd : "-1", fore->w_histheight);
                     }
                   fprintf(f, buf);
                 }
