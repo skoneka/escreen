@@ -5634,11 +5634,7 @@ struct win *p;
 #endif
   if (p->w_layer.l_cvlist && p->w_layer.l_cvlist->c_lnext)
     *s++ = '&';
-  if (p->w_monitor == MON_DONE
-#ifdef MULTIUSER
-      && (ACLBYTE(p->w_mon_notify, D_user->u_id) & ACLBIT(D_user->u_id))
-#endif
-     )
+  if (p->w_monitor == MON_DONE)
     *s++ = '@';
   if (p->w_bell == BELL_DONE)
     *s++ = '!';
