@@ -579,10 +579,13 @@ int dump;
                   else if (fore->w_type == W_TYPE_GROUP)
                     tty=SaveStr("group");
                   else
-                    tty = (dump == DUMP_SCSWINDOW) ? fore->w_tty : "basic";
+                    if (strlen(fore->w_tty)==0)
+                      tty=SaveStr("zombie");
+                    else
+                      tty = (dump == DUMP_SCSWINDOW) ? fore->w_tty : "basic";
                   if (dump == DUMP_SCSWINDOW)
                     {
-                      sprintf(buf,"%d %d %s\n",fore->w_number,(fore->w_group) ? fore->w_group->w_number: -1, tty);
+                      sprintf(buf,"%d %d %s %s\n",fore->w_number,(fore->w_group) ? fore->w_group->w_number: -1, tty, fore->w_title);
                     }
                   else
                     {
