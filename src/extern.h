@@ -128,6 +128,7 @@ extern void  ISearch __P((int));
 /* input.c */
 extern void  inp_setprompt __P((char *, char *));
 extern void  Input __P((char *, int, int, void (*)(char *, int, char *), char *, int));
+extern int   dump_history __P((char *));
 extern int   InInput __P((void));
 
 /* help.c */

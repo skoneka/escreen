@@ -1314,12 +1314,19 @@ int key;
 	  if (!display || !D_layout)
 	    OutputMsg(0, "Must have a display and a layout for 'dumpscreen layout'.");
 	  else if (!LayoutDumpCanvasScs(&D_canvas, args[1] ? args[1] : "layout-dump-size"))
-	    OutputMsg(errno, "Error dumping layout size.");
+	    OutputMsg(errno, "Error dumping layout size ");
 	  else
 	    OutputMsg(0, "Layout dumped to \"%s\"", args[1] ? args[1] : "layout-dump-size");
 	}
+      else if (!strcmp(args[0], "history"))
+        {
+          if (!dump_history(args[1]))
+            OutputMsg(errno, "Error dumping history ");
+          else
+	    OutputMsg(0, "history dumped to \"%s\"", args[1]); 
+        }
       else
-        OutputMsg(0, "Usage: dumpscreen [window|layout] filename [-F]");
+        OutputMsg(0, "Usage: dumpscreen [window|layout|history] filename [-F]");
       break;
     case RC_HARDCOPY:
       {
