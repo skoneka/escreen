@@ -181,7 +181,7 @@ struct comm comms[RC_LAST + 1] =
   { "digraph",		NEED_LAYER|ARGS_012 },
   { "dinfo",		NEED_DISPLAY|ARGS_0 },
   { "displays",		NEED_LAYER|ARGS_0 },
-  { "dumpscreen",       CAN_QUERY|ARGS_23 },
+  { "dumpscreen",       CAN_QUERY|ARGS_0123 },
   { "dumptermcap",	NEED_FORE|ARGS_0 },
   { "echo",		CAN_QUERY|ARGS_12 },
 #ifdef ENCODINGS

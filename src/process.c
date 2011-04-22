@@ -1300,7 +1300,7 @@ int key;
       WriteFile(user, (char *)0, DUMP_TERMCAP);
       break;
     case RC_DUMPSCREEN:
-      if (!strcmp(args[0], "window"))
+      if (args[0] && args[1] && !strcmp(args[0], "window"))
         {
           int mode;
           if (args[2] && !strcmp(args[2],"-F"))
@@ -1309,7 +1309,7 @@ int key;
             mode = DUMP_SCSWINDOW;
           WriteFile(user, args[1], mode);
         }
-      else if (!strcmp(args[0], "layout"))
+      else if (args[0] && args[1] && !strcmp(args[0], "layout"))
 	{
 	  if (!display || !D_layout)
 	    OutputMsg(0, "Must have a display and a layout for 'dumpscreen layout'.");
@@ -1318,7 +1318,7 @@ int key;
 	  else
 	    OutputMsg(0, "Layout dumped to \"%s\"", args[1] ? args[1] : "layout-dump-size");
 	}
-      else if (!strcmp(args[0], "history"))
+      else if (args[0] && args[1] && !strcmp(args[0], "history"))
         {
           if (!dump_history(args[1]))
             OutputMsg(errno, "Error dumping history ");
