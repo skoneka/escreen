@@ -570,7 +570,6 @@ int dump;
             case DUMP_SCSWINDOW:
             case DUMP_SCSWINDOWFULL:
                 {
-                  char buf[1024];
                   char *tty=NULL;
                   if (!fore)
                     break;
@@ -585,13 +584,19 @@ int dump;
                       tty = (dump == DUMP_SCSWINDOW) ? fore->w_tty : "basic";
                   if (dump == DUMP_SCSWINDOW)
                     {
-                      sprintf(buf,"%d %d %s %s\n",fore->w_number,(fore->w_group) ? fore->w_group->w_number: -1, tty, fore->w_title);
+                      fprintf(f,"%d %d %s %s\n",fore->w_number,(fore->w_group) ? fore->w_group->w_number: -1, tty, fore->w_title);
                     }
                   else
                     {
-                      sprintf(buf,"%d\n%s\n%d %s\n%s\n%s\n%s\n%d\n",fore->w_number,"\0", (fore->w_group) ? fore->w_group->w_number: -1, (fore->w_group) ? fore->w_group->w_title : "", tty ,fore->w_title,  fore->w_pwin ? fore->w_pwin->p_cmd : "-1", fore->w_histheight);
+                      fprintf(f,"%d\n%s\n%d %s\n%s\n%s\n%s\n%d\n",fore->w_number,"\0", (fore->w_group) ? fore->w_group->w_number: -1, (fore->w_group) ? fore->w_group->w_title : "", tty ,fore->w_title,  fore->w_pwin ? fore->w_pwin->p_cmd : "-1", fore->w_histheight);
+                      int i=0;
+                      while(fore->w_cmdargs[i]) 
+                        {
+                          fprintf(f,"%s",fore->w_cmdargs[i++]);
+                          fputc('\0',f);
+                        }
+                      fprintf(f,"\n");
                     }
-                  fprintf(f, buf);
                 }
               break;
 	    case DUMP_TERMCAP:
