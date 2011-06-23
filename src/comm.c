@@ -276,7 +276,6 @@ struct comm comms[RC_LAST + 1] =
 #endif
   { "readreg",          ARGS_0|ARGS_ORMORE },
   { "redisplay",	NEED_DISPLAY|ARGS_0 },
-  { "regionsize",		CAN_QUERY|NEED_DISPLAY|ARGS_0 },
   { "register",		ARGS_24 },
   { "remove",		NEED_DISPLAY|ARGS_0 },
 #ifdef COPY_PASTE
