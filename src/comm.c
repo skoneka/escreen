@@ -56,7 +56,6 @@ struct comm comms[RC_LAST + 1] =
 #ifdef MULTIUSER
   { "addacl",		ARGS_1234 },
 #endif
-  { "alias",	ARGS_12|ARGS_ORMORE },
   { "allpartial",	NEED_DISPLAY|ARGS_1 },
   { "altscreen",	ARGS_01 },
   { "at",		CAN_QUERY|ARGS_2|ARGS_ORMORE },
