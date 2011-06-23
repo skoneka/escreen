@@ -66,7 +66,6 @@ int visual_bell = 0;
 int use_hardstatus = 1;		/* display status line in hs */
 char *printcmd = 0;
 int use_altscreen = 0;		/* enable alternate screen support? */
-int defakaargs = 0;         /* number of command arguments displayed by autoaka */
 
 unsigned char *blank;		/* line filled with spaces */
 unsigned char *null;		/* line filled with '\0' */
@@ -2291,21 +2290,13 @@ FindAKA()
       else
 	wp->w_autoaka = 0;
       line = cp;
-      int aka_word_counter=0;
-      int aka_spaces_counter=0;
-      while (len && aka_spaces_counter < 2 && aka_word_counter <= defakaargs)
+      while (len && *cp != ' ')
 	{
-      if (*cp == ' ')
-      {
-        aka_spaces_counter++;
-        aka_word_counter++;
-      }
-      else aka_spaces_counter = 0;
 	  if (*cp++ == '/')
-        line = cp;
+	    line = cp;
 	  len--;
 	}
-      ChangeAKA(wp, (char *)line, cp - line - aka_spaces_counter);
+      ChangeAKA(wp, (char *)line, cp - line);
     }
   else
     wp->w_autoaka = 0;

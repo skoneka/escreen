@@ -86,7 +86,6 @@ extern int defmousetrack;
 extern int ZombieKey_destroy;
 extern int ZombieKey_resurrect;
 extern int ZombieKey_onerror;
-extern int defakaargs;
 #ifdef AUTO_NUKE
 extern int defautonuke;
 #endif
@@ -2815,17 +2814,6 @@ int key;
         (void)ParseOnOff(act, &nwin_default.lflag);
       break;
 #endif
-    case RC_DEFAKAARGS:
-      if(!args[0])
-      {
-        char buf[256];
-        sprintf(buf, "current displayed autoaka arguments: %d", defakaargs);
-        Msg(0, buf);
-        break;
-      }
-      Msg(0, "displayed autoaka arguments set to: %s", args[0]);
-      defakaargs=atoi(args[0]);
-      break;
     case RC_DEFFLOW:
       if (args[0] && args[1] && args[1][0] == 'i')
 	{

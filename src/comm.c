@@ -132,7 +132,6 @@ struct comm comms[RC_LAST + 1] =
   { "crlf",		ARGS_01 },
 #endif
   { "debug",		ARGS_01 },
-  { "defakaargs",	ARGS_01 },
 #ifdef AUTO_NUKE
   { "defautonuke",	ARGS_1 },
 #endif
