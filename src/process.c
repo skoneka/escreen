@@ -1286,14 +1286,23 @@ int key;
             mode = DUMP_SCSWINDOW;
           WriteFile(user, args[1], mode);
         }
-      else if (args[0] && args[1] && !strcmp(args[0], "layout"))
+      else if (args[0] && !strcmp(args[0], "layout"))
 	{
 	  if (!display || !D_layout)
 	    OutputMsg(0, "Must have a display and a layout for 'dumpscreen layout'.");
-	  else if (!LayoutDumpCanvasScs(&D_canvas, args[1] ? args[1] : "layout-dump-size"))
-	    OutputMsg(errno, "Error dumping layout size ");
+	  else if (!LayoutDumpCanvasScs(&D_canvas, args[1] ? args[1] : "layout-regions"))
+	    OutputMsg(errno, "Error dumping layout regions");
 	  else
-	    OutputMsg(0, "Layout dumped to \"%s\"", args[1] ? args[1] : "layout-dump-size");
+	    OutputMsg(0, "Layout dumped to \"%s\"", args[1] ? args[1] : "layout-regions");
+	}
+      else if (args[0] && !strcmp(args[0], "layout-info"))
+	{
+	  if (!display || !D_layout)
+	    OutputMsg(0, "Must have a display and a layout for 'dumpscreen layoutinfo'.");
+	  else if (!DumpLayoutsInfoScs(args[1] ? args[1] : "layout-info"))
+	    OutputMsg(errno, "Error dumping layout info");
+	  else
+	    OutputMsg(0, "Layout info dumped to \"%s\"", args[1] ? args[1] : "layout-info");
 	}
       else if (args[0] && args[1] && !strcmp(args[0], "history"))
         {

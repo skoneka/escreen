@@ -419,6 +419,28 @@ char *filename;
   return 1;
 }
 
+DumpLayoutsInfoScs(filename)
+char *filename;
+{
+  char *s, *ss, *t;
+  struct layout *p, **pp;
+  int l;
+  
+  FILE *file = secfopen(filename, "w");
+  int count=0;
+  if (!file)
+    return 0;
+
+  for (pp = laytab; pp < laytab + MAXLAY; pp++)
+    {
+      if ((p = *pp) == 0)
+        continue;
+      fprintf(file,"%d %s\n",p->lay_number,p->lay_title);
+    }
+  fclose(file);
+  return 1;
+}
+
 void RenameLayout(layout, name)
 struct layout *layout;
 const char *name;
