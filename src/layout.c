@@ -412,7 +412,7 @@ char *filename;
   int count=0;
   if (!file)
     return 0;
-  fprintf(file,"%d %d\n%d %d\n",D_width, D_height, D_layout->lay_focusminwidth, D_layout->lay_focusminheight);
+  fprintf(file,"%s\n%d %d\n%d %d\n", D_layout->lay_title, D_width, D_height, D_layout->lay_focusminwidth, D_layout->lay_focusminheight);
   count=dump_canvas_scs(cv, file);
   fprintf(file,"%d\n",count);
   fclose(file);
