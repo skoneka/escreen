@@ -35,7 +35,7 @@
  * Maximum of simultaneously allowed windows per screen session.
  */
 #ifndef MAXWIN
-# define MAXWIN 300
+# define MAXWIN 100
 #endif
 
 /*
