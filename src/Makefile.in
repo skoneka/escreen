@@ -185,9 +185,9 @@ $(SCREEN).tar: .version term.h comm.h tty.c kmapdef.c
 	-rm -rf dist
 	mkdir dist
 	mkdir dist/$(SCREEN)
-	ln acls.h ansi.h display.h extern.h logfile.h mark.h os.h \
-	   layer.h patchlevel.h screen.h window.h image.h \
-	   osdef.h.in term.sh tty.sh comm.sh osdef.sh braille.h \
+	ln acls.h ansi.h canvas.h display.h extern.h logfile.h mark.h os.h \
+	   layer.h layout.h list_generic.h patchlevel.h screen.h viewport.h window.h \
+	   image.h osdef.h.in term.sh tty.sh comm.sh osdef.sh braille.h \
 	   sched.h \
 	   $(CFILES) \
 	   ChangeLog COPYING INSTALL NEWS* TODO install.sh \
