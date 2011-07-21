@@ -32,7 +32,7 @@
 
 #include "canvas.h"
 
-#define MAXLAY 320
+#define MAXLAY 10
 
 struct layout
 {
