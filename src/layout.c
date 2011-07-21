@@ -36,9 +36,11 @@ extern int captionalways;
 extern int focusminwidth, focusminheight;
 
 struct layout *layouts;
-struct layout *laytab[MAXLAY];
+struct layout **laytab;
 struct layout *layout_last, layout_last_marker;
 struct layout *layout_attach = &layout_last_marker;
+
+int maxlay = MAXLAY;
 
 void
 FreeLayoutCv(cv)
@@ -68,13 +70,18 @@ int startat;
   struct layout *lay, **pl;
   int i;
 
-  if (startat >= MAXLAY || startat < 0)
+  if (!laytab)
+    {
+      laytab = calloc(maxlay, sizeof(struct layout *));
+    }
+
+  if (startat >= maxlay || startat < 0)
     startat = 0;
   for (i = startat; ;)
     {
       if (!laytab[i])
         break;
-      if (++i == MAXLAY)
+      if (++i == maxlay)
 	i = 0;
       if (i == startat)
 	{
@@ -142,7 +149,7 @@ char *name;
   int i;
   for (i = 0, s = name; *s >= '0' && *s <= '9'; s++)
     i = i * 10 + (*s - '0');
-  if (!*s && s != name && i >= 0 && i < MAXLAY)
+  if (!*s && s != name && i >= 0 && i < maxlay)
     return laytab[i];
   for (lay = layouts; lay; lay = lay->lay_next)
     if (!strcmp(lay->lay_title, name))
@@ -223,7 +230,7 @@ int where;
   int l;
 
   s = ss = buf;
-  for (pp = laytab; pp < laytab + MAXLAY; pp++)
+  for (pp = laytab; pp < laytab + maxlay; pp++)
     {
       if (pp - laytab == where && ss == buf)
 	ss = s;
@@ -433,7 +440,7 @@ char *filename;
   if (!file)
     return 0;
 
-  for (pp = laytab; pp < laytab + MAXLAY; pp++)
+  for (pp = laytab; pp < laytab + maxlay; pp++)
     {
       if ((p = *pp) == 0)
         continue;
@@ -458,7 +465,7 @@ int number;
   int old;
   struct layout *lay;
   old = layout->lay_number;
-  if (number < 0 || number >= MAXLAY)
+  if (number < 0 || number >= maxlay)
     return 0;
   lay = laytab[number];
   laytab[number] = layout;

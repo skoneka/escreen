@@ -70,7 +70,7 @@ extern char *VisualBellString;
 extern int VBellWait, MsgWait, MsgMinWait, SilenceWait;
 extern char SockPath[], *SockName;
 extern int TtyMode, auto_detach, use_altscreen;
-extern int iflag, maxwin;
+extern int iflag, maxwin, maxlay;
 extern int focusminwidth, focusminheight;
 extern int use_hardstatus, visual_bell;
 #ifdef COLOR
@@ -177,7 +177,7 @@ extern struct display *display, *displays;
 extern struct win *fore, *console_window, *windows;
 extern struct acluser *users;
 extern struct layout *layouts, *layout_attach, layout_last_marker;
-extern struct layout *laytab[];
+extern struct layout **laytab;
 
 extern char screenterm[], HostName[], version[];
 extern struct NewWindow nwin_undef, nwin_default;
@@ -4151,6 +4151,25 @@ int key;
       (void)ParseSwitch(act, &use_altscreen);
       if (msgok)
         OutputMsg(0, "Will %sdo alternate screen switching", use_altscreen ? "" : "not ");
+      break;
+    case RC_MAXLAY:
+      if (!args[0])
+	{
+	  OutputMsg(0, "maximum layouts allowed: %d", maxlay);
+	  break;
+	}
+      if (ParseNum(act, &n))
+	break;
+      if (n < 1)
+        OutputMsg(0, "illegal maxlay number specified");
+      else if (n > 2048)
+	OutputMsg(0, "maximum 2048 layouts allowed");
+      else if (n > maxlay && laytab)
+	OutputMsg(0, "may increase maxlay only when there's no layout");
+      else
+	{
+	  maxlay = n;
+	}
       break;
     case RC_MAXWIN:
       if (!args[0])
