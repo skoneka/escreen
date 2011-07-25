@@ -208,7 +208,7 @@ extern void  KillWindow __P((struct win *));
 extern void  SetForeWindow __P((struct win *));
 extern int   Parse __P((char *, int, char **, int *));
 extern void  SetEscape __P((struct acluser *, int, int));
-extern void  DoScreen __P((char *, char **));
+extern int   DoScreen __P((char *, char **));
 extern int   IsNumColon __P((char *, int, char *, int));
 extern void  ShowWindows __P((struct action *,int));
 extern char *AddWindows __P((char *, int, int, int));

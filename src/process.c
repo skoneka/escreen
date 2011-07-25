@@ -2149,7 +2149,7 @@ int key;
 	OutputMsg(0, "%s", D_status_lastmsg);
       break;
     case RC_SCREEN:
-      DoScreen("key", args);
+      OutputMsg(0, "New window: %d", DoScreen("key", args));
       break;
     case RC_WRAP:
       if (ParseSwitch(act, &fore->w_wrap) == 0 && msgok)
@@ -6016,7 +6016,7 @@ char *arg;
  * -ln, -l0, -ly, -l1, -l
  * -a, -M, -L
  */
-void
+int
 DoScreen(fn, av)
 char *fn, **av;
 {
@@ -6133,7 +6133,7 @@ char *fn, **av;
       if (!nwin.aka)
         nwin.aka = Filename(*av);
     }
-  MakeWindow(&nwin);
+  return MakeWindow(&nwin);
 }
 
 #ifdef COPY_PASTE

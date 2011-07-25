@@ -284,7 +284,7 @@ struct comm comms[RC_LAST + 1] =
   { "rendition",	ARGS_23 },
   { "reset",		NEED_FORE|ARGS_0 },
   { "resize",		NEED_DISPLAY|ARGS_0|ARGS_ORMORE },
-  { "screen",		ARGS_0|ARGS_ORMORE },
+  { "screen",		CAN_QUERY|ARGS_0|ARGS_ORMORE },
 #ifdef COPY_PASTE
   { "scrollback",	NEED_FORE|ARGS_01 },
 #endif
