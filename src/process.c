@@ -1277,14 +1277,13 @@ int key;
       WriteFile(user, (char *)0, DUMP_TERMCAP);
       break;
     case RC_DUMPSCREEN:
-      if (args[0] && args[1] && !strcmp(args[0], "window"))
+      if (args[0] && !strcmp(args[0], "window"))
         {
-          int mode;
-          if (args[2] && !strcmp(args[2],"-F"))
-            mode = DUMP_SCSWINDOWFULL;
-          else
-            mode = DUMP_SCSWINDOW;
-          WriteFile(user, args[1], mode);
+          WriteFile(user, args[1] ? args[1] : "dumpscreen-window" , DUMP_SCSWINDOW);
+        }
+      else if (args[0] && !strcmp(args[0], "window-full"))
+        {
+          WriteFile(user, args[1] ? args[1] : "dumpscreen-window-full", DUMP_SCSWINDOWFULL);
         }
       else if (args[0] && !strcmp(args[0], "layout"))
 	{
@@ -1312,7 +1311,7 @@ int key;
 	    OutputMsg(0, "history dumped to \"%s\"", args[1]); 
         }
       else
-        OutputMsg(0, "Usage: dumpscreen [window|layout|history] filename [-F]");
+        OutputMsg(0, "Usage: dumpscreen [ window | window-full | layout | layout-info | history ] filename");
       break;
     case RC_HARDCOPY:
       {

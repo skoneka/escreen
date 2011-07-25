@@ -406,7 +406,8 @@ FILE *file;
         { 
           count++;
           p = Layer2Window(c->c_layer);
-          fprintf(file, "%s%d %d %d\n", (D_forecv==c) ? "f ":"",(p) ? p->w_number : -1, c->c_xe-c->c_xs+1,c->c_ye-c->c_ys+1);
+          fprintf(file, "%s%d %d %d\n", (D_forecv==c) ? "f ":"",
+                  (p) ? p->w_number : -1, c->c_xe - c->c_xs + 1, c->c_ye - c->c_ys + 1);
         }
     }
   return count;
@@ -421,9 +422,9 @@ char *filename;
   int count=0;
   if (!file)
     return 0;
-  fprintf(file,"%s\n%d %d\n%d %d\n", D_layout->lay_title, D_width, D_height, D_layout->lay_focusminwidth, D_layout->lay_focusminheight);
-  count=dump_canvas_scs(cv, file);
-  fprintf(file,"%d\n",count);
+  fprintf(file,"%s\n%d %d\n%d %d\n", D_layout->lay_title, D_width, D_height,
+          D_layout->lay_focusminwidth, D_layout->lay_focusminheight);
+  dump_canvas_scs(cv, file);
   fclose(file);
   return 1;
 }
@@ -435,7 +436,7 @@ char *filename;
   struct layout *p, **pp;
   int l;
   
-  FILE *file = secfopen(filename, "w");
+  FILE *file = secfopen(filename, "a");
   int count=0;
   if (!file)
     return 0;
