@@ -984,6 +984,8 @@ Enter a digraph sequence.  @xref{Digraph}.
 Display terminal information.  @xref{Info}.
 @item displays
 List currently active user interfaces. @xref{Displays}.
+@item dumpscreen [window|window-full|layout|layout-info|history]
+Write internal Screen data to a file or directory (experimental).  @xref{Dumpscreen}.
 @item dumptermcap
 Write the window's termcap entry to a file.  @xref{Dump Termcap}.
 @item echo [-n] @var{message}
@@ -1080,6 +1082,8 @@ Don't try to do keymapping on the next keystroke.  @xref{Bindkey Control}.
 Set the inter-character timeout used for keymapping. @xref{Bindkey Control}.
 @item markkeys @var{string}
 Rebind keys in copy mode.  @xref{Copy Mode Keys}.
+@item maxlay @var{n}
+Set the maximum layout number. @xref{Maxlay}.
 @item maxwin @var{n}
 Set the maximum window number. @xref{Maxwin}.
 @item meta
@@ -5022,6 +5026,7 @@ categories.
 * At::                          Execute a command at other displays or windows.
 * Break::                       Send a break signal to the window.
 * Debug::                       Suppress/allow debugging output.
+* Dumpscreen::                  Write internal Screen data to a file.
 * License::                     Display the disclaimer page.
 * Nethack::                     Use @code{nethack}-like error messages.
 * Nonblock::			Disable flow-control to a display.
@@ -5037,6 +5042,7 @@ categories.
 * Attrcolor::			Map attributes to colors.
 * Setsid::			Change process group management.
 * Eval::			Parse and execute arguments.
+* Maxlay::			Set the maximum layout number.
 * Maxwin::			Set the maximum window number.
 * Backtick::			Program a command for a backtick string escape.
 * Screen Saver::		Define a screen safer.
@@ -5120,7 +5126,7 @@ dependent, this also differs between serial board drivers.
 Calling @code{defbreaktype} with no parameter displays the current setting.
 @end deffn
 
-@node Debug, License, Break, Miscellaneous
+@node Debug, Dumpscreen, Break, Miscellaneous
 @section Debug
 @deffn Command debug [on|off]
 (none)@*
@@ -5131,7 +5137,13 @@ Note that this command only affects debugging output from the main
 be turned off once and forever.
 @end deffn
 
-@node License, Nethack, Debug, Miscellaneous
+@node Dumpscreen, License, Debug, Miscellaneous
+@section Dumpscreen
+@deffn Command dumpscreen [window|window-full|layout|layout-info|history]
+Write internal Screen data to a file or directory (experimental).
+@end deffn
+
+@node License, Nethack, Dumpscreen, Miscellaneous
 @section License
 @kindex ,
 @deffn Command license
@@ -5325,14 +5337,23 @@ The default is @code{on}, of course. This command is probably useful
 only in rare circumstances.
 @end deffn
 
-@node Eval, Maxwin, Setsid, Miscellaneous
+@node Eval, Maxlay, Setsid, Miscellaneous
 @section Eval
 @deffn Command eval @var{command1} [@var{command2} ...]
 (none)@*
 Parses and executes each argument as separate command.
 @end deffn
 
-@node Maxwin, Backtick, Eval, Miscellaneous
+@node Maxlay, Maxwin, Eval, Miscellaneous
+@section Maxlay
+@deffn Command maxlay @var{n}
+(none)@*
+Set the maximum layout number screen will create. Doesn't affect 
+already existing layouts. The number can be increased only when there are no
+existing layouts.
+@end deffn
+
+@node Maxwin, Backtick, Maxlay, Miscellaneous
 @section Maxwin
 @deffn Command maxwin @var{n}
 (none)@*

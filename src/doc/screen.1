@@ -315,10 +315,16 @@ error in the command, then the querying process will exit with
 a non-zero status.
 
 The commands that can be queried now are:
+ \fBdumpscreen\fP
  \fBecho\fP
  \fBinfo\fP
  \fBlastmsg\fP
+ \fBlayout\fP
+ \fBgroup\fP
+ \fBmaxlay\fP
+ \fBmaxwin\fP
  \fBnumber\fP
+ \fBscreen\fP
  \fBselect\fP
  \fBtime\fP
  \fBtitle\fP
@@ -1813,6 +1819,12 @@ if a zero value is provided for the
 .I unicode-value.
 .sp
 .ne 3
+.BR "dumpscreen " [ \fIwindow | \fIwindow-full | \fIlayout | \fIlayout-info | \fIhistory ]
+.RI [ \fIfile ]
+.PP
+Write internal Screen data to a file or directory (experimental).
+.sp
+.ne 3
 .B dumptermcap
 .PP
 Write the termcap entry for the virtual terminal optimized for the currently
@@ -2505,6 +2517,13 @@ The no-op character is `@' and is used like this: \*Qmarkkeys
 @=L=H\*U if you do not want to use the `H' or `L' commands any longer.
 As shown in this example, multiple keys can be assigned to one function in a 
 single statement.
+.sp
+.ne 3
+.BI "maxlay " num
+.PP
+Set the maximum layout number screen will create. Doesn't affect
+already existing layouts. The number can be increased only when there are no
+existing .
 .sp
 .ne 3
 .BI "maxwin " num
