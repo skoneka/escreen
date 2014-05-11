@@ -33,11 +33,14 @@
 
 extern struct display *display;
 extern int captionalways;
+extern int focusminwidth, focusminheight;
 
 struct layout *layouts;
-struct layout *laytab[MAXLAY];
+struct layout **laytab;
 struct layout *layout_last, layout_last_marker;
 struct layout *layout_attach = &layout_last_marker;
+
+int maxlay = MAXLAY;
 
 void
 FreeLayoutCv(cv)
@@ -67,13 +70,18 @@ int startat;
   struct layout *lay, **pl;
   int i;
 
-  if (startat >= MAXLAY || startat < 0)
+  if (!laytab)
+    {
+      laytab = calloc(maxlay, sizeof(struct layout *));
+    }
+
+  if (startat >= maxlay || startat < 0)
     startat = 0;
   for (i = startat; ;)
     {
       if (!laytab[i])
         break;
-      if (++i == MAXLAY)
+      if (++i == maxlay)
 	i = 0;
       if (i == startat)
 	{
@@ -141,7 +149,7 @@ char *name;
   int i;
   for (i = 0, s = name; *s >= '0' && *s <= '9'; s++)
     i = i * 10 + (*s - '0');
-  if (!*s && s != name && i >= 0 && i < MAXLAY)
+  if (!*s && s != name && i >= 0 && i < maxlay)
     return laytab[i];
   for (lay = layouts; lay; lay = lay->lay_next)
     if (!strcmp(lay->lay_title, name))
@@ -166,6 +174,8 @@ struct canvas *cv;
     }
   while (D_canvas.c_slperp)
     FreeCanvas(D_canvas.c_slperp);
+  focusminwidth = lay->lay_focusminwidth;
+  focusminheight = lay->lay_focusminheight;
   D_cvlist = 0;
   D_forecv = lay->lay_forecv;
   if (!D_forecv)
@@ -220,7 +230,7 @@ int where;
   int l;
 
   s = ss = buf;
-  for (pp = laytab; pp < laytab + MAXLAY; pp++)
+  for (pp = laytab; pp < laytab + maxlay; pp++)
     {
       if (pp - laytab == where && ss == buf)
 	ss = s;
@@ -379,6 +389,68 @@ char *filename;
   return 1;
 }
 
+int
+dump_canvas_scs(cv, file)
+struct canvas *cv;
+FILE *file;
+{
+  struct canvas *c;
+  struct win *p;
+  int count=0;
+  
+  for (c = cv->c_slperp; c; c = c->c_slnext)
+    {
+      if (c->c_slperp)
+        count+=dump_canvas_scs(c, file);
+      else 
+        { 
+          count++;
+          p = Layer2Window(c->c_layer);
+          fprintf(file, "%s%d %d %d\n", (D_forecv==c) ? "f ":"",
+                  (p) ? p->w_number : -1, c->c_xe - c->c_xs + 1, c->c_ye - c->c_ys + 1);
+        }
+    }
+  return count;
+}
+
+int
+LayoutDumpCanvasScs(cv, filename)
+struct canvas *cv;
+char *filename;
+{
+  FILE *file = secfopen(filename, "a");
+  int count=0;
+  if (!file)
+    return 0;
+  fprintf(file,"%s\n%d %d\n%d %d\n", D_layout->lay_title, D_width, D_height,
+          D_layout->lay_focusminwidth, D_layout->lay_focusminheight);
+  dump_canvas_scs(cv, file);
+  fclose(file);
+  return 1;
+}
+
+DumpLayoutsInfoScs(filename)
+char *filename;
+{
+  char *s, *ss, *t;
+  struct layout *p, **pp;
+  int l;
+  
+  FILE *file = secfopen(filename, "a");
+  int count=0;
+  if (!file)
+    return 0;
+
+  for (pp = laytab; pp < laytab + maxlay; pp++)
+    {
+      if ((p = *pp) == 0)
+        continue;
+      fprintf(file,"%d %s\n",p->lay_number,p->lay_title);
+    }
+  fclose(file);
+  return 1;
+}
+
 void RenameLayout(layout, name)
 struct layout *layout;
 const char *name;
@@ -394,7 +466,7 @@ int number;
   int old;
   struct layout *lay;
   old = layout->lay_number;
-  if (number < 0 || number >= MAXLAY)
+  if (number < 0 || number >= maxlay)
     return 0;
   lay = laytab[number];
   laytab[number] = layout;

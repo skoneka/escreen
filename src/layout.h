@@ -43,6 +43,8 @@ struct layout
   struct canvas   *lay_forecv;
   struct canvas   *lay_cvlist;
   int              lay_autosave;
+  int              lay_focusminwidth;
+  int              lay_focusminheight;
 };
 
 extern void  AutosaveLayout __P((struct layout *));

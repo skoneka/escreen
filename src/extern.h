@@ -129,6 +129,7 @@ extern void  ISearch __P((int));
 /* input.c */
 extern void  inp_setprompt __P((char *, char *));
 extern void  Input __P((char *, int, int, void (*)(char *, int, char *), char *, int));
+extern int   dump_history __P((char *));
 extern int   InInput __P((void));
 
 /* help.c */
@@ -208,7 +209,7 @@ extern void  KillWindow __P((struct win *));
 extern void  SetForeWindow __P((struct win *));
 extern int   Parse __P((char *, int, char **, int *));
 extern void  SetEscape __P((struct acluser *, int, int));
-extern void  DoScreen __P((char *, char **));
+extern int   DoScreen __P((char *, char **));
 extern int   IsNumColon __P((char *, int, char *, int));
 extern void  ShowWindows __P((int));
 extern char *AddWindows __P((char *, int, int, int));

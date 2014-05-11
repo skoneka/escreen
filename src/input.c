@@ -167,6 +167,32 @@ int data;
     inp_setprompt(istr, (char *)NULL);
 }
 
+int
+dump_history(char *filename)
+{
+  struct inpline *inp;
+  inp = inphist.prev;
+  char *b=NULL;
+  FILE *f = NULL;
+  if( f = secfopen(filename,"w") )
+    {
+      if (inp->prev) 
+        {
+          inp = inp->prev;
+          while(inp)
+            {
+              b=SaveStr((char *)inp);
+              fprintf(f,"%s\n",b);
+              inp = inp->prev;
+            }
+        }
+      fclose(f);
+      return 1;
+    }
+  else
+    return 0;
+}
+
 static void
 erase_chars(inpdata, from, to, x, mv)
 struct inpdata *inpdata;

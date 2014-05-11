@@ -59,7 +59,7 @@ struct comm comms[RC_LAST + 1] =
 #endif
   { "allpartial",	NEED_DISPLAY|ARGS_1 },
   { "altscreen",	ARGS_01 },
-  { "at",		ARGS_2|ARGS_ORMORE },
+  { "at",		CAN_QUERY|ARGS_2|ARGS_ORMORE },
 #ifdef COLOR
   { "attrcolor",	ARGS_12 },
 #endif
@@ -180,6 +180,7 @@ struct comm comms[RC_LAST + 1] =
   { "digraph",		NEED_LAYER|ARGS_012 },
   { "dinfo",		NEED_DISPLAY|ARGS_0 },
   { "displays",		NEED_LAYER|ARGS_0 },
+  { "dumpscreen",       CAN_QUERY|ARGS_012 },
   { "dumptermcap",	NEED_FORE|ARGS_0 },
   { "echo",		CAN_QUERY|ARGS_12 },
 #ifdef ENCODINGS
@@ -195,7 +196,7 @@ struct comm comms[RC_LAST + 1] =
   { "focus",		NEED_DISPLAY|ARGS_01 },
   { "focusminsize",	ARGS_02 },
   { "gr",		NEED_FORE|ARGS_01 },
-  { "group",            NEED_FORE|ARGS_01 },
+  { "group",            CAN_QUERY|NEED_FORE|ARGS_01 },
   { "hardcopy",		NEED_FORE|ARGS_012 },
   { "hardcopy_append",	ARGS_1 },
   { "hardcopydir",	ARGS_01 },
@@ -214,7 +215,7 @@ struct comm comms[RC_LAST + 1] =
 #endif
   { "kill",		NEED_FORE|ARGS_0 },
   { "lastmsg",		CAN_QUERY|NEED_DISPLAY|ARGS_0 },
-  { "layout",           ARGS_1|ARGS_ORMORE},
+  { "layout",           CAN_QUERY|ARGS_1|ARGS_ORMORE},
   { "license",		NEED_LAYER|ARGS_0 },
 #ifdef LOCK
   { "lockscreen",	NEED_DISPLAY|ARGS_0 },
@@ -233,7 +234,8 @@ struct comm comms[RC_LAST + 1] =
 #ifdef COPY_PASTE
   { "markkeys",		ARGS_1 },
 #endif
-  { "maxwin",		ARGS_01 },
+  { "maxlay",		CAN_QUERY|ARGS_01 },
+  { "maxwin",		CAN_QUERY|ARGS_01 },
   { "meta",		NEED_LAYER|ARGS_0 },
   { "monitor",		NEED_FORE|ARGS_01 },
   { "mousetrack",	NEED_DISPLAY | ARGS_01 },
@@ -281,12 +283,12 @@ struct comm comms[RC_LAST + 1] =
   { "rendition",	ARGS_23 },
   { "reset",		NEED_FORE|ARGS_0 },
   { "resize",		NEED_DISPLAY|ARGS_0|ARGS_ORMORE },
-  { "screen",		ARGS_0|ARGS_ORMORE },
+  { "screen",		CAN_QUERY|ARGS_0|ARGS_ORMORE },
 #ifdef COPY_PASTE
-  { "scrollback",	NEED_FORE|ARGS_1 },
+  { "scrollback",	NEED_FORE|ARGS_01 },
 #endif
   { "select",		CAN_QUERY|ARGS_01 },
-  { "sessionname",	ARGS_01 },
+  { "sessionname",	CAN_QUERY|ARGS_01 },
   { "setenv",		ARGS_012 },
   { "setsid",		ARGS_1 },
   { "shell",		ARGS_1 },
@@ -312,6 +314,7 @@ struct comm comms[RC_LAST + 1] =
   { "terminfo",		ARGS_23 },
   { "time",		CAN_QUERY|ARGS_01 },
   { "title",		CAN_QUERY|NEED_FORE|ARGS_01 },
+  { "tty",		CAN_QUERY|ARGS_0 },
   { "umask",		ARGS_1|ARGS_ORMORE },
   { "unbindall",	ARGS_0 },
   { "unsetenv",		ARGS_1 },

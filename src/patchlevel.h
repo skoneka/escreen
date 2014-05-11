@@ -528,9 +528,10 @@
  * 12.10.2004, 4.00.03jw1 let docu of 'split' 'focus' 'remove' and 'only' refer to each other.
  * 01.11.2004, 4.00.03jw2 zombie command has new option 'onerror'
  * 2005-12-19, 4.00.03jw3 syntax error.
+ * 2011-07-27, 4.01.00scs_0.6.3 added dumpscreen, tty and maxlay commands
  */
 
-#define ORIGIN "GNU"
+#define ORIGIN "screen-session project"
 #define REV 4
 #define VERS 2
 #define PATCHLEVEL 1
